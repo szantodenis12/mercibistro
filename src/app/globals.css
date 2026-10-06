@@ -1,0 +1,298 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Merci design tokens — see .claude/skills/merci-design/SKILL.md
+   ------------------------------------------------------------------ */
+@theme {
+  /* Brand */
+  --color-gold: #d4ab65;
+  --color-gold-deep: #7d5f28; /* gold text on light backgrounds (AA 5.2:1 on paper) */
+  --color-gold-soft: #e6cc9c;
+  --color-navy: #1a282e;
+  --color-navy-2: #1f3038;
+  --color-navy-3: #1b2a31;
+  --color-ink: #030612;
+  /* Neutrals (Ballena cream → Merci paper, warmed toward the gold) */
+  --color-paper: #f5efe3;
+  --color-paper-2: #ece3d1;
+  --color-stone: #d8ccb6;
+  --color-muted: #5b5a55; /* secondary text on paper (6:1) */
+  --color-mist: #c9c2b4; /* secondary text on navy (8.5:1) */
+
+  --font-display: var(--font-josefin), "Josefin Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-figtree), "Figtree", ui-sans-serif, system-ui, sans-serif;
+  --font-script: var(--font-homemade), cursive;
+
+  --ease-merci: cubic-bezier(0.16, 1, 0.3, 1);
+  --tracking-title: 0.025em;
+  --tracking-eyebrow: 0.075em;
+  --tracking-eyebrow-sm: 0.04375em;
+}
+
+/* ------------------------------------------------------------------
+   Fluid root (Ballena §6): every size is an em/rem multiple of a
+   viewport-driven root, re-anchored per breakpoint tier.
+   ------------------------------------------------------------------ */
+:root {
+  --size-unit: 16;
+  --size-container-ideal: 1440;
+  --size-container-min: 1025px;
+  --size-container-max: 1920px;
+  --size-container: clamp(var(--size-container-min), 100vw, var(--size-container-max));
+  --size-font: max(14px, calc(var(--size-container) / (var(--size-container-ideal) / var(--size-unit))));
+  --gutter: 1.25rem;
+}
+@media (max-width: 1024px) {
+  :root {
+    --size-container-ideal: 960;
+    --size-container-min: 768px;
+    --size-container-max: 1024px;
+  }
+}
+@media (max-width: 767px) {
+  :root {
+    --size-container-ideal: 600;
+    --size-container-min: 480px;
+    --size-container-max: 767px;
+  }
+}
+@media (max-width: 479px) {
+  :root {
+    --size-container-ideal: 390;
+    --size-container-min: 320px;
+    --size-container-max: 479px;
+    --gutter: 1rem;
+  }
+}
+
+html {
+  font-size: var(--size-font);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  line-height: 1.35;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+/* ------------------------------------------------------------------
+   Type scale (Ballena §2) — uppercase display, lh .9, +.025em, wt 400
+   ------------------------------------------------------------------ */
+@layer components {
+  .title-xl,
+  .title-l,
+  .title-m,
+  .title-s,
+  .title-sm,
+  .title-xs {
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 0.95; /* Ballena uses .9 — +.05 gives Romanian diacritics (Ș, Ț, Ă) room */
+    letter-spacing: var(--tracking-title);
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+  .title-xl { font-size: 5.125rem; }
+  .title-l { font-size: 4rem; }
+  .title-m { font-size: 3.625rem; }
+  .title-s { font-size: 3rem; }
+  .title-sm { font-size: 2rem; }
+  .title-xs { font-size: 1.5rem; }
+
+  .eyebrow,
+  .eyebrow-l,
+  .eyebrow-mini,
+  .link-caps {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  .eyebrow-l { font-size: 1.5rem; letter-spacing: var(--tracking-eyebrow); font-weight: 400; line-height: 0.95; }
+  .eyebrow { font-size: 0.875rem; letter-spacing: var(--tracking-eyebrow-sm); font-weight: 500; }
+  .eyebrow-mini { font-size: 0.75rem; letter-spacing: var(--tracking-eyebrow-sm); font-weight: 500; }
+  .link-caps { font-size: 0.875rem; letter-spacing: var(--tracking-eyebrow-sm); font-weight: 500; }
+
+  .paragraph-l { font-size: 1.125rem; line-height: 1.4; font-weight: 500; }
+  .paragraph-m { font-size: 1rem; line-height: 1.45; font-weight: 500; }
+
+  .script {
+    font-family: var(--font-script);
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 1024px) {
+    .title-xl { font-size: 2.75rem; }
+    .title-l { font-size: 2.25rem; }
+    .title-m { font-size: 2rem; }
+    .title-s { font-size: 1.75rem; }
+    .title-sm { font-size: 1.5rem; }
+    .title-xs { font-size: 1.125rem; }
+    .eyebrow-l { font-size: 1.125rem; }
+  }
+
+  .container-x {
+    width: 100%;
+    padding-inline: var(--gutter);
+    margin-inline: auto;
+    max-width: 120rem;
+  }
+
+  /* Buttons: sharp-cornered primary CTA (rounded shapes are reserved for the header pill) */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75em;
+    padding: 1.15em 2em 1em;
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: var(--tracking-eyebrow-sm);
+    text-transform: uppercase;
+    line-height: 1;
+    border: 1px solid currentColor;
+    transition: background-color 0.3s var(--ease-merci), color 0.3s var(--ease-merci),
+      border-color 0.3s var(--ease-merci), opacity 0.3s var(--ease-merci);
+  }
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  .btn-gold { background: var(--color-gold); border-color: var(--color-gold); color: var(--color-ink); }
+  .btn-gold:not(:disabled):hover { background: var(--color-paper); border-color: var(--color-paper); }
+  .btn-ghost-light { color: #fff; border-color: rgb(255 255 255 / 0.5); }
+  .btn-ghost-light:hover { background: #fff; color: var(--color-ink); border-color: #fff; }
+  .btn-ink { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-paper); }
+  .btn-ink:not(:disabled):hover { background: var(--color-navy); border-color: var(--color-navy); }
+  .btn-ghost-ink { color: var(--color-ink); border-color: rgb(3 6 18 / 0.35); }
+  .btn-ghost-ink:hover { background: var(--color-ink); color: var(--color-paper); border-color: var(--color-ink); }
+
+  /* Secondary text link + circular arrow icon (Ballena .btn-secondary) */
+  .arrow-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.85em;
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: var(--tracking-eyebrow-sm);
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  .arrow-link .arrow-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 2.5em;
+    height: 2.5em;
+    border-radius: 999px;
+    border: 1px solid currentColor;
+    transition: background-color 0.3s var(--ease-merci);
+  }
+  .arrow-link .arrow-icon svg {
+    transition: color 0.3s var(--ease-merci), transform 0.4s var(--ease-merci);
+  }
+  .arrow-link:hover .arrow-icon { background: currentColor; }
+  .arrow-link:hover .arrow-icon svg { color: var(--arrow-hover, var(--color-paper)); transform: translateX(2px); }
+}
+
+/* ------------------------------------------------------------------
+   Motion initial states. `.has-anim` is added by an inline head script
+   only when the user has NOT requested reduced motion, so content is
+   never hidden for reduced-motion users or if JS fails to run.
+   ------------------------------------------------------------------ */
+.split-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  /* room for diacritics (Ă, Ș, Ț) inside the mask */
+  padding-block: 0.24em 0.12em;
+  margin-block: -0.24em -0.12em;
+}
+.split-inner {
+  display: inline-block;
+}
+html.has-anim .split-inner {
+  transform: translateY(115%);
+}
+html.has-anim [data-fade] {
+  opacity: 0;
+  transform: translateY(1.25rem);
+}
+html.has-anim [data-hero-bg] {
+  transform: scale(1.15);
+}
+
+/* Preloader — only visible on the first visit of a session */
+.preloader {
+  display: none;
+}
+html.show-preloader .preloader {
+  display: flex;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Page-transition feel (Ballena/Swup cross-fade ≈ .4s) — template.tsx remounts per route */
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(0.75rem); }
+  to { opacity: 1; transform: none; }
+}
+.page-enter {
+  animation: page-in 0.6s var(--ease-merci) both;
+}
