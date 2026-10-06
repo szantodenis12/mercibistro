@@ -32,10 +32,22 @@
 /* ------------------------------------------------------------------
    Fluid root (Ballena §6): every size is an em/rem multiple of a
    viewport-driven root, re-anchored per breakpoint tier.
+   The "ideal" values are Ballena's real design-reference widths, NOT
+   the breakpoint's own min/max — using the breakpoint width as "ideal"
+   (old: 1440/960/600/390) overshot the root size badly, e.g. 21.3px
+   at a 1920px-wide screen. Copying Ballena's real numbers (1728 /
+   834 / 550 / 360, from the raw CSS) brings 1440px desktop from
+   16px → 14px root (floor-clamped, -12.5%) and 1920px from 21.3px →
+   17.8px (-16.6%), matching Ballena's actual proportions instead of a
+   guess. Desktop/tablet keep Ballena's real 14px floor (needed for
+   the shrink to take effect at all), but the two phone-width tiers
+   (≤767px) raise the floor to 16px so `.paragraph-m` (1rem) body
+   copy never drops below 16px on a phone — 360px already lands
+   exactly on 16px unclamped, so this only engages below that.
    ------------------------------------------------------------------ */
 :root {
   --size-unit: 16;
-  --size-container-ideal: 1440;
+  --size-container-ideal: 1728;
   --size-container-min: 1025px;
   --size-container-max: 1920px;
   --size-container: clamp(var(--size-container-min), 100vw, var(--size-container-max));
@@ -44,24 +56,27 @@
 }
 @media (max-width: 1024px) {
   :root {
-    --size-container-ideal: 960;
+    --size-container-ideal: 834;
     --size-container-min: 768px;
     --size-container-max: 1024px;
   }
 }
 @media (max-width: 767px) {
   :root {
-    --size-container-ideal: 600;
+    --size-container-ideal: 550;
     --size-container-min: 480px;
     --size-container-max: 767px;
+    /* phone widths: raise the floor to 16px so body copy never drops below it */
+    --size-font: max(16px, calc(var(--size-container) / (var(--size-container-ideal) / var(--size-unit))));
   }
 }
 @media (max-width: 479px) {
   :root {
-    --size-container-ideal: 390;
+    --size-container-ideal: 360;
     --size-container-min: 320px;
     --size-container-max: 479px;
     --gutter: 1rem;
+    --size-font: max(16px, calc(var(--size-container) / (var(--size-container-ideal) / var(--size-unit))));
   }
 }
 

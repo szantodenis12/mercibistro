@@ -24,7 +24,7 @@ Font CSS variables live on `<html>` (required: `@theme` vars resolve at `:root`)
 | `gold` | #d4ab65 | brand accent: split-content block bg, CTAs (`.btn-gold`), eyebrows on dark, stars |
 | `gold-deep` | #7d5f28 | gold *text* on light bg (5.2:1 on paper) — never use `gold` text on paper |
 | `gold-soft` | #e6cc9c | headings on navy, script tagline |
-| `navy` / `navy-2` / `navy-3` | #1a282e / #1f3038 / #1b2a31 | dark blocks (hero-simple, CTA card, pillars), header when scrolled |
+| `navy` / `navy-2` / `navy-3` | #1a282e / #1f3038 / #1b2a31 | dark blocks (hero-simple, CTA card, pillars) |
 | `ink` | #030612 | text on light, footer bg, dark buttons |
 | `paper` | #f5efe3 | default page bg (Ballena cream → warmed to the gold) |
 | `paper-2` | #ece3d1 | alternate light section (Ballena #F9FBF3 break), summary boxes |
@@ -35,8 +35,14 @@ Ballena mapping: cream → `paper`, terracotta block → `gold` block, sage card
 All text pairs above pass WCAG AA; ink on gold = 9.4:1.
 
 ## Fluid sizing & type scale
-Root font-size is fluid (Ballena §6): `--size-font = max(14px, container / (ideal / 16))`, tiers ideal 1440 (≥1025),
-960 (768–1024), 600 (480–767), 390 (≤479). **Size everything in `rem`** (Tailwind spacing is rem too) so it all scales.
+Root font-size is fluid (Ballena §6): `--size-font = max(14px, container / (ideal / 16))`, tiers ideal **1728** (≥1025),
+**834** (768–1024), **550** (480–767), **360** (≤479) — these are Ballena's real design-reference widths copied verbatim
+from the raw CSS, not the breakpoint's own min/max (that earlier mistake — using 1440/960/600/390 — made the root run
+~15–20% too big, worst at the top of each tier: 21.3px at a 1920px-wide screen). Result: 1440px desktop lands on the
+14px floor (16px → 14px, −12.5%); 1920px is 17.8px (was 21.3px, −16.6%). The two phone-width tiers (≤767px) raise their
+own floor to **16px** so `.paragraph-m` (1rem) body copy never drops below 16px on a phone (360px lands exactly on 16px
+unclamped; desktop/tablet keep the real 14px floor since the shrink depends on it). **Size everything in `rem`**
+(Tailwind spacing is rem too) so it all scales — don't hardcode `px` font sizes or arbitrary non-rem spacing.
 | Class | Desktop | ≤1024 | Notes |
 |---|---|---|---|
 | `.title-xl` | 5.125rem | 2.75rem | hero h1 |
@@ -54,7 +60,17 @@ Titles: uppercase, weight 400, line-height **0.95** (Ballena .9 + room for diacr
 - Editorial pattern (reused everywhere): eyebrow in cols 1–4, `SplitText` title + paragraph in cols 5–12.
 
 ## Components (in `src/components`)
-- `Header` — floating glass pill: fixed, `max-w-[47rem]`, radius .375rem, `backdrop-blur-[25px]`, `bg-ink/30` at top → `bg-navy/90` scrolled → `bg-paper` when menu open; dropdown links stagger 50ms.
+- `Header` — Ballena's `.block-header` pill, reproduced exactly: fixed, `top-[0.5rem] lg:top-[1rem]`, `max-w-[45rem]`,
+  height `2.875rem` (`3.75rem` ≥1024px), padding `0.5625rem` (`0.1875rem` ≥1024px), radius `.375rem`, `backdrop-blur-[25px]`,
+  `bg-ink/[0.19]` translucent (text `paper`) → solid `bg-paper` (text `ink`) when the menu is open. Ballena has **no**
+  separate "scrolled" state and does **not** hide on scroll — only those two states exist, so don't reintroduce a
+  scroll-triggered third variant. Logo is absolutely centered in the pill (`left-1/2 -translate-x-1/2`); CTA
+  ("Comandă online", Ballena's bordered book-button style) sits left, cart button + a 3-line hamburger toggle sit
+  right. **No inline nav links at any breakpoint** — the toggle opens the same dropdown panel on desktop and mobile
+  alike (Ballena's `.block-header__toggle` + `.block-header__menu`): a `grid-rows-[0fr→1fr]` panel below the pill,
+  centered `title-sm` links staggered 50ms, phone + socials row at the bottom. Esc closes, focus is trapped in the
+  panel while open and returns to the toggle on close, scroll is locked and Lenis paused (`lockScroll()`), `inert` on
+  the closed panel keeps it out of the tab order.
 - Buttons: `.btn` + `.btn-gold | .btn-ink | .btn-ghost-light | .btn-ghost-ink` — **sharp corners**. Rounded shapes only for header pill, chips, circular icon buttons.
 - `.arrow-link` + `<ArrowCircle/>` — text link with circular arrow that fills on hover (set `--arrow-hover` on dark bgs).
 - `blocks.tsx`: `Eyebrow`, `PageHero` (Ballena hero-simple), `RevealImage` (zoom-settle or `parallax`), `SplitText`.
