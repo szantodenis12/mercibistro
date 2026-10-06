@@ -53,6 +53,7 @@ unclamped; desktop/tablet keep the real 14px floor since the shrink depends on i
 | `.title-xs` | 1.5rem | 1.125rem | |
 Titles: uppercase, weight 400, line-height **0.95** (Ballena .9 + room for diacritics), tracking +0.025em, `text-wrap: balance`.
 `.eyebrow` .875rem/500/+0.04375em, `.eyebrow-l` 1.5rem/+0.075em, `.eyebrow-mini` .75rem. Body: `.paragraph-l` 1.125rem, `.paragraph-m` 1rem, lh 1.4.
+Eyebrows are **plain text, no leading line/dash** — just the uppercase label (the `Eyebrow` component in `blocks.tsx` renders a bare `<p className="eyebrow …">`, nothing else). Its left edge must line up exactly with the heading/paragraph it introduces (same column, no extra padding), and it must be centered when its section is centered.
 
 ## Spacing & layout
 - `.container-x` = full width, gutter `--gutter` (1.25rem; 1rem ≤479px), max 120rem. 12-col grids on `lg`.

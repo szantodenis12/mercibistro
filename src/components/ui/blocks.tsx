@@ -5,9 +5,8 @@ import { SplitText } from "@/components/motion/SplitText";
 
 export function Eyebrow({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <p className={clsx("eyebrow flex items-center gap-[0.75em]", className)} data-fade>
-      <span className="inline-block h-px w-[2.25em] bg-current opacity-60" aria-hidden="true" />
-      <span className="pt-[0.15em]">{children}</span>
+    <p className={clsx("eyebrow", className)} data-fade>
+      {children}
     </p>
   );
 }
